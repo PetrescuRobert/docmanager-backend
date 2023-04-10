@@ -43,7 +43,7 @@ public class Employee implements UserDetails {
     private List<TaskUpdate> tasksUpdates;
 
     @ManyToOne
-    @JoinColumn(name = "dep_id", nullable = false)
+    @JoinColumn(name = "dep_id") // add_nullable = false
     private Department department;
 
     @Enumerated(EnumType.STRING)

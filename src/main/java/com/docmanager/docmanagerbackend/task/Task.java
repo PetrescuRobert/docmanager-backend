@@ -25,7 +25,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
-    private Employee author; //todo: this should be an object(Employee) same in employee -> field assigned for his tasks
+    private Employee author;
 
     @ManyToOne
     @JoinColumn(name = "employee_assigned_id", referencedColumnName = "id", nullable = false)

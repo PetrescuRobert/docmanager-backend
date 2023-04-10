@@ -2,6 +2,8 @@ package com.docmanager.docmanagerbackend.employee;
 
 import com.docmanager.docmanagerbackend.department.Department;
 import com.docmanager.docmanagerbackend.document.Document;
+import com.docmanager.docmanagerbackend.task.Task;
+import com.docmanager.docmanagerbackend.taskupdate.TaskUpdate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +32,15 @@ public class Employee implements UserDetails {
 
     @OneToMany(mappedBy = "author")
     private List<Document> documents;
+
+    @OneToMany(mappedBy = "author")
+    private List<Task> tasksAssignedToOthers;
+
+    @OneToMany(mappedBy = "employeeAssigned")
+    private List<Task> tasksAssignedToThis;
+
+    @OneToMany(mappedBy = "author")
+    private List<TaskUpdate> tasksUpdates;
 
     @ManyToOne
     @JoinColumn(name = "dep_id", nullable = false)

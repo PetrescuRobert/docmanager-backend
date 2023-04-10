@@ -1,5 +1,7 @@
 package com.docmanager.docmanagerbackend.employee;
 
+import com.docmanager.docmanagerbackend.department.Department;
+import com.docmanager.docmanagerbackend.document.Document;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +27,13 @@ public class Employee implements UserDetails {
     private String lastName;
     private String email;
     private String password;
+
+    @OneToMany(mappedBy = "author")
+    private List<Document> documents;
+
+    @ManyToOne
+    @JoinColumn(name = "dep_id", nullable = false)
+    private Department department;
 
     @Enumerated(EnumType.STRING)
     private Role role;

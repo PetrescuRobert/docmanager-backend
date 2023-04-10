@@ -1,7 +1,7 @@
 package com.docmanager.docmanagerbackend.department;
 
 import com.docmanager.docmanagerbackend.employee.Employee;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Department {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
-    private List<Employee> employees; //todo: one-to many relationship with foreign key must have the anotation @ManyToOne in the entity that have many
+    @OneToMany(mappedBy = "department")
+    private List<Employee> employees;
 }

@@ -23,7 +23,8 @@ public class EmployeeService {
 
     private List<EmployeeDTO> mapEntitiesToDtos(List<Employee> employees) {
         return employees
-                .stream().map(employee -> mapEntityToDto(employee))
+                .stream()
+                .map(employee -> mapEntityToDto(employee))
                 .collect(Collectors.toList());
     }
 
@@ -31,13 +32,22 @@ public class EmployeeService {
         return mapEntitiesToDtos(repository.findAll());
     }
 
-    public ResponseEntity<EmployeeDTO> getEmployeeById(int id) {
+    public EmployeeDTO getEmployeeById(int id) {
         Optional<Employee> queryResult = repository
                 .findById(id);
         if (queryResult.isPresent())
-            return ResponseEntity.ok(mapEntityToDto(queryResult.get()));
+            return mapEntityToDto(queryResult.get());
         else
-            return ResponseEntity.notFound().build();
+            return null;
     }
 
+    public Employee getEmployeeByEmail(String email) {
+        Optional<Employee> employee = repository.findByEmail(email);
+        return employee.isPresent() ? employee.get() : null;
+    }
+
+
+    public void save(Employee employee) {
+        repository.save(employee);
+    }
 }

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +21,9 @@ public class EmployeeController {
 
     @GetMapping("/api/employee/{id}")
     ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable int id) {
-        return employeeService.getEmployeeById(id);
+        EmployeeDTO requestResponse = employeeService.getEmployeeById(id);
+        return requestResponse != null ?
+                ResponseEntity.ok(requestResponse) : ResponseEntity.notFound().build();
     }
 
 }

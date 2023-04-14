@@ -4,6 +4,7 @@ import com.docmanager.docmanagerbackend.employee.Employee;
 import com.docmanager.docmanagerbackend.employee.EmployeeService;
 import com.docmanager.docmanagerbackend.task.Task;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,23 @@ public class DocumentService {
     private final DocumentRepository repository;
     private final EmployeeService employeeService;
 
+    private DocumentDTO mapDocumentToDocumentDto(Document document) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(document, DocumentDTO.class);
+    }
+    private void saveDocument(String fileName, String downloadPath, Set<Task> relatedTasks) {
+        String authorEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Employee author = employeeService.getEmployeeByEmail(authorEmail);
+        Document document = Document
+                .builder()
+                .uploadDate(new Date())
+                .name(fileName)
+                .author(author)
+                .relatedTasks(relatedTasks)
+                .path(downloadPath)
+                .build();
+        repository.save(document);
+    }
     public ResponseEntity uploadDocument(MultipartFile file) {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         Path path = Paths.get("doc_uploads", fileName);
@@ -33,7 +51,7 @@ public class DocumentService {
             try {
                 Files.createDirectories(path);
             } catch (IOException exception) {
-                throw new RuntimeException("Can't initialize folder for upload");
+                exception.printStackTrace();
             }
         }
         //if exists write file into "uploads" directory
@@ -56,17 +74,30 @@ public class DocumentService {
         return ResponseEntity.ok("File uploaded!");
     }
 
-    private void saveDocument(String fileName, String downloadPath, Set<Task> relatedTasks) {
-        String authorEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Employee author = employeeService.getEmployeeByEmail(authorEmail);
-        Document document = Document
-                .builder()
-                .uploadDate(new Date())
-                .name(fileName)
-                .author(author)
-                .relatedTasks(relatedTasks)
-                .path(downloadPath)
-                .build();
-        repository.save(document);
+    public ResponseEntity uploadDocuments(MultipartFile[] files) {
+        Arrays.asList(files)
+                .stream()
+                .forEach(file -> uploadDocument(file));
+        return ResponseEntity.ok("Files uploaded!");
     }
+
+    public DocumentDTO getDocumentByName(String name) {
+        Optional<Document> queryResponse = repository.findByName(name);
+        return queryResponse.isPresent() ? mapDocumentToDocumentDto(queryResponse.get()) : null;
+    }
+
+    public DocumentDTO getDocumentById(int id) {
+        Optional<Document> queryResponse = repository.findById(id);
+        return queryResponse.isPresent() ? mapDocumentToDocumentDto(queryResponse.get()) : null;
+    }
+
+    public List<DocumentDTO> getDocumentsByEmployeeId(int employeeId) {
+        List<Document> queryResponse = repository.findByAuthor(employeeId);
+        if (!queryResponse.isEmpty())
+            return queryResponse.stream()
+                    .map(document -> mapDocumentToDocumentDto(document))
+                    .collect(Collectors.toList());
+        return null;
+    }
+
 }

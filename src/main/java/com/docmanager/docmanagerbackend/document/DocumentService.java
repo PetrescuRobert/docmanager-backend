@@ -100,4 +100,9 @@ public class DocumentService {
         return null;
     }
 
+    public boolean deleteDocumentById(int id) {
+        if (repository.findById(id).isPresent())
+            repository.deleteById(id);
+        return false;
+    }
 }

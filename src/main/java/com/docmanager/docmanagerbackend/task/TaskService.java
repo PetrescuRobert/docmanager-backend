@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -52,5 +53,23 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
+    public boolean deleteTaskById(int id) {
+        if (repository.findById(id).isPresent()) {
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 
+    public boolean updateTask(TaskDTO taskDTO) {
+        try {
+            Task task = repository.findById(taskDTO.getId()).get();
+            task.setTitle(taskDTO.getTitle());
+            task.setDescription(taskDTO.getDescription());
+            repository.save(task);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
 }

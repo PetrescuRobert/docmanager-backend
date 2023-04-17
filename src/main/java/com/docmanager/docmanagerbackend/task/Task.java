@@ -4,16 +4,14 @@ import com.docmanager.docmanagerbackend.document.Document;
 import com.docmanager.docmanagerbackend.employee.Employee;
 import com.docmanager.docmanagerbackend.taskupdate.TaskUpdate;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -46,4 +44,18 @@ public class Task {
             inverseJoinColumns = @JoinColumn(name = "doc_id")
     )
     private Set<Document> relatedDocuments;
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", author={id" + author.getId() + ", firstName: " + author.getFirstName() + ", lastName: " + author.getLastName() + "}"  +
+                ", employeeAssigned={id" + employeeAssigned.getId() + ", firstName: " + employeeAssigned.getFirstName() + ", lastName: " + employeeAssigned.getLastName() + "}"  +
+                ", taskUpdates=" + taskUpdates +
+                ", postDate=" + postDate +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", relatedDocuments=" + relatedDocuments +
+                '}';
+    }
 }

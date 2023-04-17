@@ -5,7 +5,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,8 +35,22 @@ public class TaskService {
         return null;
     }
 
-    public void getTaskById(int id) {
+    public TaskDTO getTaskById(int id) {
         Optional<Task> queryResult = repository.findById(id);
-        System.out.println(repository.findById(id));
+        return mapTaskToTaskDto(queryResult.get());
     }
+
+    public TaskDTO getTaskByTitle(String title) {
+        Optional<Task> queryResult = repository.findByTitle(title);
+        return mapTaskToTaskDto(queryResult.get());
+    }
+
+    public List<TaskDTO> getTasksByPostDate(Date postDate) {
+        List<Task> queryResult = repository.findByPostDate(postDate);
+        return queryResult.stream()
+                .map(task -> mapTaskToTaskDto(task))
+                .collect(Collectors.toList());
+    }
+
+
 }

@@ -18,7 +18,9 @@ public class TaskController {
 
     @GetMapping("/api/task/{id}")
     public ResponseEntity getTaskById(@PathVariable int id) {
-        taskService.getTaskById(id);
-        return ResponseEntity.ok("ok");
+        TaskDTO queryResult = taskService.getTaskById(id);
+        return queryResult != null ?
+                ResponseEntity.status(HttpStatus.FOUND).body(queryResult) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task does not exist");
     }
 }

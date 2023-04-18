@@ -49,7 +49,7 @@ public class Task {
     public String toString() {
         return "Task{" +
                 "id=" + id +
-                ", author={id" + author.getId() + ", firstName: " + author.getFirstName() + ", lastName: " + author.getLastName() + "}"  +
+                ", author={id:" + author.getId() + ", firstName: " + author.getFirstName() + ", lastName: " + author.getLastName() + "}"  +
                 ", employeeAssigned={id" + employeeAssigned.getId() + ", firstName: " + employeeAssigned.getFirstName() + ", lastName: " + employeeAssigned.getLastName() + "}"  +
                 ", taskUpdates=" + taskUpdates +
                 ", postDate=" + postDate +

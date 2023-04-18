@@ -24,7 +24,7 @@ public class TaskController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task does not exist");
     }
 
-    @PutMapping("/api/tasks/")
+    @PutMapping("/api/tasks")
     public ResponseEntity updateTask(@RequestBody TaskDTO taskDTO) {
         boolean updateTaskResponse = taskService.updateTask(taskDTO);
         return updateTaskResponse ?

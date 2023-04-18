@@ -92,7 +92,8 @@ public class DocumentService {
     }
 
     public List<DocumentDTO> getDocumentsByEmployeeId(int employeeId) {
-        List<Document> queryResponse = repository.findByAuthor(employeeId);
+        Employee employee = employeeService.getEmployeeById(employeeId);
+        List<Document> queryResponse = repository.findByAuthor(employee);
         if (!queryResponse.isEmpty())
             return queryResponse.stream()
                     .map(document -> mapDocumentToDocumentDto(document))
@@ -101,8 +102,11 @@ public class DocumentService {
     }
 
     public boolean deleteDocumentById(int id) {
-        if (repository.findById(id).isPresent())
+        if (repository.findById(id).isPresent()){
             repository.deleteById(id);
+            return true;
+        }
+
         return false;
     }
 }

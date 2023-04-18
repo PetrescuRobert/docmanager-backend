@@ -32,13 +32,17 @@ public class EmployeeService {
         return mapEntitiesToDtos(repository.findAll());
     }
 
-    public EmployeeDTO getEmployeeById(int id) {
+    public Employee getEmployeeById(int id) {
         Optional<Employee> queryResult = repository
                 .findById(id);
         if (queryResult.isPresent())
-            return mapEntityToDto(queryResult.get());
+            return queryResult.get();
         else
             return null;
+    }
+
+    public EmployeeDTO getEmployeeDtoById(int id) {
+        return mapEntityToDto(getEmployeeById(id));
     }
 
     public Employee getEmployeeByEmail(String email) {

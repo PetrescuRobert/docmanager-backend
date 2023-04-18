@@ -30,14 +30,13 @@ public class TaskService {
         ModelMapper modelMapper = new ModelMapper();
         Task task = modelMapper.map(taskDTO, Task.class);
         saveTask(task);
-
-        System.out.println(taskDTO);
-        System.out.println(task);
         return null;
     }
 
     public TaskDTO getTaskById(int id) {
         Optional<Task> queryResult = repository.findById(id);
+        if (!queryResult.isPresent())
+            return null;
         return mapTaskToTaskDto(queryResult.get());
     }
 

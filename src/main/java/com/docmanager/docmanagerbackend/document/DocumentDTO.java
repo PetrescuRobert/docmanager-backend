@@ -8,4 +8,5 @@ public class DocumentDTO {
     private Integer id;
     private String name;
     private EmployeeDTO author;
+    private String path;
 }

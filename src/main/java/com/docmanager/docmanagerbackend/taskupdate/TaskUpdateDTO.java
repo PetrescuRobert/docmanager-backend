@@ -9,4 +9,5 @@ public class TaskUpdateDTO {
     private Integer id;
     private EmployeeDTO author;
     private TaskDTO task;
+    private String description;
 }

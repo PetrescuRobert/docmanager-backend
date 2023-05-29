@@ -36,7 +36,7 @@ public class DocumentService {
         Document document = Document
                 .builder()
                 .uploadDate(new Date())
-                .name(fileName)
+                .docName(fileName)
                 .author(author)
                 .relatedTasks(relatedTasks)
                 .path(downloadPath)
@@ -82,7 +82,7 @@ public class DocumentService {
     }
 
     public DocumentDTO getDocumentByName(String name) {
-        Optional<Document> queryResponse = repository.findByName(name);
+        Optional<Document> queryResponse = repository.findByDocName(name);
         return queryResponse.isPresent() ? mapDocumentToDocumentDto(queryResponse.get()) : null;
     }
 

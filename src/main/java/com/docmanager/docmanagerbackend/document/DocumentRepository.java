@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DocumentRepository extends JpaRepository<Document, Integer> {
-    Optional<Document> findByName(String name);
+    Optional<Document> findByDocName(String name);
 
     List<Document> findByAuthor(Employee employee);
 }

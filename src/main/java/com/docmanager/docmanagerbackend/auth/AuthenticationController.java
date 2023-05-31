@@ -5,14 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = {"*"})
+
 @RestController
-@RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@CrossOrigin
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-    @PostMapping("/register")
+    @PostMapping("/api/register")
     public ResponseEntity register(
             @RequestBody RegisterRequest request
     ){
@@ -24,12 +24,21 @@ public class AuthenticationController {
                 ResponseEntity.status(HttpStatus.CONFLICT).body("User with same email already exists");
     }
 
-    @PostMapping("/authenticate")
+    //i want to write a controller that handle the login request
+    //and return a response entity with the token
+    @PostMapping("/api/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request
     ){
-        // todo
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+        //i want to check if the service will return
+        // if is null, i want to return a response entity with a error mesaage
+        // if is not null, i want to return a response entity with the token
+        AuthenticationResponse response = authenticationService.authenticate(request);
+        if (response.getToken() == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        else
+            return ResponseEntity.ok(response);
+
     }
 
 }

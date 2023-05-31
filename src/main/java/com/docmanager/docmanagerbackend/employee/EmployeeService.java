@@ -44,6 +44,9 @@ public class EmployeeService {
     public EmployeeDTO getEmployeeDtoById(int id) {
         return mapEntityToDto(getEmployeeById(id));
     }
+    public EmployeeDTO getEmployeeDtoByEmail(String email) {
+        return mapEntityToDto(getEmployeeByEmail(email));
+    }
 
     public Employee getEmployeeByEmail(String email) {
         Optional<Employee> employee = repository.findByEmail(email);

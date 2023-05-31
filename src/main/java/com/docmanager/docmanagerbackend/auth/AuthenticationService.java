@@ -39,9 +39,10 @@ public class AuthenticationService {
                 .build();
     }
 
+    //i want to rewrite this method to return a response if the user does not exists
+    //and if the user exists, i want to return a response with the token
+
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        System.out.println(request.getEmail());
-        System.out.println(request.getPassword());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -49,8 +50,14 @@ public class AuthenticationService {
                 )
         );
         var employee = employeeService.getEmployeeByEmail(request.getEmail());
+        if (employee == null)
+            return AuthenticationResponse
+                    .builder()
+                    .token(null)
+                    .build();
         var jwtToken = jwtService.generateToken(employee);
         return AuthenticationResponse.builder()
+                .userDetails(employeeService.getEmployeeDtoByEmail(request.getEmail()))
                 .token(jwtToken)
                 .build();
     }

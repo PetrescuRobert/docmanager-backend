@@ -1,5 +1,7 @@
 package com.docmanager.docmanagerbackend.employee;
 
+import com.docmanager.docmanagerbackend.department.Department;
+import com.docmanager.docmanagerbackend.department.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EmployeeService {
     private final EmployeeRepository repository;
+    private final DepartmentRepository departmentRepository;
 
     private EmployeeDTO mapEntityToDto(Employee employee) {
         ModelMapper modelMapper = new ModelMapper();
@@ -56,5 +59,14 @@ public class EmployeeService {
 
     public void save(Employee employee) {
         repository.save(employee);
+    }
+
+    public List<EmployeeDTO> getEmployeesByDepartment(int id) {
+        Employee employee = getEmployeeById(id);
+        Department employeeDepartment = departmentRepository.findByManager(employee);
+        List<Employee> employees = repository.findByDepartment(employeeDepartment);
+        //if in the list is the employee with id == id, remove it
+        employees.removeIf(e -> e.getId() == id);
+        return mapEntitiesToDtos(employees);
     }
 }

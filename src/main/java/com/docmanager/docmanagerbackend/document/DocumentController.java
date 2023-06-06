@@ -24,6 +24,18 @@ public class DocumentController {
     public ResponseEntity uploadDocuments(@RequestParam("files") MultipartFile[] files) {
         return documentService.uploadDocuments(files);
     }
+    //method that return the file as a resource to download
+    @GetMapping("/api/doc/download/{fileName}")
+    public ResponseEntity downloadDocument(@PathVariable String fileName) {
+        return documentService.downloadDocument(fileName);
+    }
+    //method that return a list with all documents
+    @GetMapping("/api/doc/list")
+    public ResponseEntity getAllDocuments() {
+        List<DocumentDTO> documentDTOList = documentService.getAllDocuments();
+        return documentDTOList != null ?
+                ResponseEntity.ok(documentDTOList) : ResponseEntity.notFound().build();
+    }
 
     @GetMapping("/api/doc/id={id}")
     public ResponseEntity getDocumentById(@PathVariable int id) {

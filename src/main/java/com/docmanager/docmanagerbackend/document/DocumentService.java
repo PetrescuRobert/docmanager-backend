@@ -5,6 +5,8 @@ import com.docmanager.docmanagerbackend.employee.EmployeeService;
 import com.docmanager.docmanagerbackend.task.Task;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.io.*;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -38,7 +40,7 @@ public class DocumentService {
                 .uploadDate(new Date())
                 .docName(fileName)
                 .author(author)
-                .relatedTasks(relatedTasks)
+//                .relatedTasks(relatedTasks)
                 .path(downloadPath)
                 .build();
         repository.save(document);
@@ -108,5 +110,23 @@ public class DocumentService {
         }
 
         return false;
+    }
+
+    public List<DocumentDTO> getAllDocuments() {
+        List<Document> queryResponse = repository.findAll();
+        if (!queryResponse.isEmpty())
+            return queryResponse.stream()
+                    .map(document -> mapDocumentToDocumentDto(document))
+                    .collect(Collectors.toList());
+        return null;
+    }
+
+    public ResponseEntity downloadDocument(String fileName) {
+        Resource resource =  new PathResource("doc_uploads/" + fileName);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
     }
 }

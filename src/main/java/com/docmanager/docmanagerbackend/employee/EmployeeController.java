@@ -20,6 +20,15 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }
 
+    //get all the employees in the same department as emp_id
+    @GetMapping("/api/employees/emp_id/{id}")
+    public ResponseEntity getEmployeesByDepartment(@PathVariable int id) {
+        List<EmployeeDTO> employeeDTOList = employeeService.getEmployeesByDepartment(id);
+        return employeeDTOList != null ?
+                ResponseEntity.ok(employeeDTOList) : ResponseEntity.notFound().build();
+    }
+
+
     @GetMapping("/api/employee/{id}")
     ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable int id) {
         EmployeeDTO requestResponse = employeeService.getEmployeeDtoById(id);

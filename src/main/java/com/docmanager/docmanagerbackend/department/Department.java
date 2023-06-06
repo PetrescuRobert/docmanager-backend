@@ -13,12 +13,15 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "Departments")
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
+    @OneToOne
+    private Employee manager;
     @OneToMany(mappedBy = "department")
     private List<Employee> employees;
+
 }

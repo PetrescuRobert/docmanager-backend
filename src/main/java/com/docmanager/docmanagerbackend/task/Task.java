@@ -2,6 +2,7 @@ package com.docmanager.docmanagerbackend.task;
 
 import com.docmanager.docmanagerbackend.document.Document;
 import com.docmanager.docmanagerbackend.employee.Employee;
+import com.docmanager.docmanagerbackend.taskupdate.TaskUpdate;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,6 +40,9 @@ public class Task {
             inverseJoinColumns = @JoinColumn(name = "doc_id")
     )
     private List<Document> relatedDocuments;
+
+    @OneToMany(mappedBy = "task")
+    private List<TaskUpdate> taskUpdates;
 
     @Override
     public String toString() {

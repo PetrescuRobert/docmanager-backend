@@ -12,4 +12,5 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     List<Task> findByPostDate(Date postDate);
 
     List<Task> findByEmployeeAssigned(Employee employee);
+    List<Task> findByAuthor(Employee employee);
 }

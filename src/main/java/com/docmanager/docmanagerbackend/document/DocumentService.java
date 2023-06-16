@@ -40,7 +40,6 @@ public class DocumentService {
                 .uploadDate(new Date())
                 .docName(fileName)
                 .author(author)
-//                .relatedTasks(relatedTasks)
                 .path(downloadPath)
                 .build();
         repository.save(document);

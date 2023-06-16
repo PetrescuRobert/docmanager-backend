@@ -9,7 +9,6 @@ import java.util.Date;
 public class DocumentDTO {
     private Integer id;
     private String docName;
-    private String docType;
     private EmployeeDTO author;
     private String path;
     private Date uploadDate;

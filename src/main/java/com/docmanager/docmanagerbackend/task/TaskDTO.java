@@ -12,7 +12,6 @@ public class TaskDTO {
     private Integer id;
     private EmployeeDTO author;
     private EmployeeDTO employeeAssigned;
-//    private List<TaskUpdateDTO> taskUpdates;
     private Date postDate;
     private String title;
     private String description;

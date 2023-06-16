@@ -35,5 +35,11 @@ public class EmployeeController {
         return requestResponse != null ?
                 ResponseEntity.ok(requestResponse) : ResponseEntity.notFound().build();
     }
+    @GetMapping("/api/employees/dep_id={id}")
+    ResponseEntity<List<EmployeeDTO>> getEmployeesByDepartmentId(@PathVariable int id) {
+        List<EmployeeDTO> requestResponse = employeeService.getEmployeesByDepartmentId(id);
+        return requestResponse != null ?
+                ResponseEntity.ok(requestResponse) : ResponseEntity.notFound().build();
+    }
 
 }

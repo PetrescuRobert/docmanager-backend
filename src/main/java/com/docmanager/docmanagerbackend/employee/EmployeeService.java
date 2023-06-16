@@ -66,7 +66,12 @@ public class EmployeeService {
         Department employeeDepartment = departmentRepository.findByManager(employee);
         List<Employee> employees = repository.findByDepartment(employeeDepartment);
         //if in the list is the employee with id == id, remove it
-        employees.removeIf(e -> e.getId() == id);
+        employees.removeIf(e -> e.getEmployeeId() == id);
+        return mapEntitiesToDtos(employees);
+    }
+    public List<EmployeeDTO> getEmployeesByDepartmentId(int id) {
+        Department department = departmentRepository.findById(id).get();
+        List<Employee> employees = repository.findByDepartment(department);
         return mapEntitiesToDtos(employees);
     }
 }

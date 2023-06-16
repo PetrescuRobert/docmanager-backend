@@ -1,5 +1,6 @@
 package com.docmanager.docmanagerbackend.attachedDocument;
 
+import com.docmanager.docmanagerbackend.document.Document;
 import com.docmanager.docmanagerbackend.taskupdate.TaskUpdate;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,4 +20,15 @@ public class AttachedDocument {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="taskupdate_id", referencedColumnName = "taskUpdateId")
     private TaskUpdate taskUpdate;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="document_id", referencedColumnName = "docId")
+    private Document parentDocument;
+    @Override
+    public String toString() {
+        return "AttachedDocument{" +
+                "attachedDocumentId=" + attachedDocumentId +
+                ", docName='" + docName + '\'' +
+                ", path='" + path + '\'' +
+                '}';
+    }
 }

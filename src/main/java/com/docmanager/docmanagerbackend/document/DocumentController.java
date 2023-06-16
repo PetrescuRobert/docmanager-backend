@@ -19,12 +19,10 @@ public class DocumentController {
     public ResponseEntity uploadDocument(@RequestParam("file") MultipartFile file) {
         return documentService.uploadDocument(file);
     }
-
     @PostMapping("/api/doc/upload-files")
     public ResponseEntity uploadDocuments(@RequestParam("files") MultipartFile[] files) {
         return documentService.uploadDocuments(files);
     }
-    //method that return the file as a resource to download
     @GetMapping("/api/doc/download/{fileName}")
     public ResponseEntity downloadDocument(@PathVariable String fileName) {
         return documentService.downloadDocument(fileName);

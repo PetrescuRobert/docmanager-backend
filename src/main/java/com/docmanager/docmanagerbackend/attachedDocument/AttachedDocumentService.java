@@ -1,7 +1,10 @@
 package com.docmanager.docmanagerbackend.attachedDocument;
 
+import com.docmanager.docmanagerbackend.document.Document;
 import com.docmanager.docmanagerbackend.taskupdate.TaskUpdate;
+import com.docmanager.docmanagerbackend.taskupdate.TaskUpdateDto;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +21,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AttachedDocumentService {
     private final AttachedDocumentRepository repository;
+
+    public AttachedDocumentDto mapEntityToDto(AttachedDocument attachedDocument) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(attachedDocument, AttachedDocumentDto.class);
+    }
 
     public void saveAttachedDocument(AttachedDocument attachedDocument) {
         repository.save(attachedDocument);
@@ -60,13 +68,14 @@ public class AttachedDocumentService {
         return downloadPaths;
     }
 
-    public void saveAttachedDocuments(MultipartFile file, TaskUpdate taskUpdate) {
+    public void saveAttachedDocuments(MultipartFile file, TaskUpdate taskUpdate, Document parentDocument) {
         String downloadPath = uploadAttachedDocument(file);
-        System.out.println(downloadPath);
         AttachedDocument attachedDocument = new AttachedDocument();
         attachedDocument.setPath(downloadPath);
         attachedDocument.setTaskUpdate(taskUpdate);
         attachedDocument.setDocName(file.getOriginalFilename());
+        //set the parent documents
+        attachedDocument.setParentDocument(parentDocument);
         saveAttachedDocument(attachedDocument);
     }
 }

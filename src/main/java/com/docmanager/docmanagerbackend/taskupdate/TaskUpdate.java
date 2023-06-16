@@ -25,7 +25,7 @@ public class TaskUpdate {
     private String message;
     private Date postDate;
     @ManyToOne
-    @JoinColumn(name = "task_id", referencedColumnName = "id")
+    @JoinColumn(name = "task_id", referencedColumnName = "taskId")
     private Task task;
     @OneToMany(mappedBy = "taskUpdate")
     private List<AttachedDocument> attachedDocuments;

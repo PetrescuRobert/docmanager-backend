@@ -20,11 +20,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity(name="Employees")
 public class Employee implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer employeeId;
     private String firstName;
     private String lastName;
     private String email;
@@ -43,7 +43,7 @@ public class Employee implements UserDetails {
 //    private List<TaskUpdate> tasksUpdates;
 
     @ManyToOne
-    @JoinColumn(name = "dep_id") // add_nullable = false
+    @JoinColumn(name = "depId") // add_nullable = false
     private Department department;
 
 

@@ -1,12 +1,13 @@
 package com.docmanager.docmanagerbackend.task;
 
-import com.docmanager.docmanagerbackend.document.Document;
+import com.docmanager.docmanagerbackend.department.DepartmentService;
 import com.docmanager.docmanagerbackend.document.DocumentService;
 import com.docmanager.docmanagerbackend.employee.Employee;
 import com.docmanager.docmanagerbackend.employee.EmployeeService;
+import com.docmanager.docmanagerbackend.taskupdate.TaskUpdate;
+import com.docmanager.docmanagerbackend.taskupdate.TaskUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -21,25 +22,25 @@ public class TaskService {
     public final TaskRepository repository;
     public final EmployeeService employeeService;
     public final DocumentService documentService;
-
+    public final DepartmentService departmentService;
+    public final TaskUpdateService taskUpdateService;
 
     private TaskDTO mapTaskToTaskDto(Task task) {
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(task, TaskDTO.class);
     }
-    //create a method that transform TaskDTO to Task
 
     public void saveTask(Task task) {
-        //add the current date to the task
         task.setPostDate(new Date());
         repository.save(task);
     }
 
     public TaskDTO createNewTask(TaskDTO taskDTO) {
+        Employee employeeAssignedTo = employeeService.getEmployeeById(taskDTO.getEmployeeAssigned().getId());
         ModelMapper modelMapper = new ModelMapper();
         Task task = modelMapper.map(taskDTO, Task.class);
-        System.out.println(task);
-        System.out.println(task);
+        task.setEmployeeAssigned(employeeAssignedTo);
+        task.setCurrentDepartment(departmentService.getDepartmentById(task.getEmployeeAssigned().getDepartment().getDepId()));
         saveTask(task);
         return null;
     }
@@ -64,7 +65,14 @@ public class TaskService {
     }
 
     public boolean deleteTaskById(int id) {
+
         if (repository.findById(id).isPresent()) {
+            Task task = repository.findById(id).get();
+            List<TaskUpdate> taskUpdates = task.getTaskUpdates();
+            //delete task updates
+            for (TaskUpdate taskUpdate : taskUpdates) {
+                    taskUpdateService.deleteTaskUpdate(taskUpdate);
+            }
             repository.deleteById(id);
             return true;
         }
@@ -86,9 +94,27 @@ public class TaskService {
     public List<TaskDTO> getAllTasksByEmployeeId(int id) {
         Employee employee = employeeService.getEmployeeById(id);
         List<Task> queryResult = repository.findByEmployeeAssigned(employee);
+        List<Task> authorTasks = repository.findByAuthor(employee);
+        queryResult.addAll(authorTasks);
         List<TaskDTO> tasks = queryResult.stream()
                 .map(task -> mapTaskToTaskDto(task))
                 .collect(Collectors.toList());
         return tasks;
+    }
+
+    public boolean changeTaskDepartment(int depId, int taskId) {
+        Task currentTask = repository.findById(taskId).get();
+        currentTask.setCurrentDepartment(departmentService.getDepartmentById(depId));
+        //set employee assigned to department manager
+        currentTask.setEmployeeAssigned(currentTask.getCurrentDepartment().getManager());
+        repository.save(currentTask);
+        return true;
+    }
+
+    public boolean assignEmployeeToTask(int empId, int taskId) {
+        Task currentTask = repository.findById(taskId).get();
+        currentTask.setEmployeeAssigned(employeeService.getEmployeeById(empId));
+        repository.save(currentTask);
+        return true;
     }
 }

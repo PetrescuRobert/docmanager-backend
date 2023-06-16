@@ -39,9 +39,6 @@ public class AuthenticationService {
                 .build();
     }
 
-    //i want to rewrite this method to return a response if the user does not exists
-    //and if the user exists, i want to return a response with the token
-
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

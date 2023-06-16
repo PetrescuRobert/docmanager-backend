@@ -17,4 +17,9 @@ public class TaskUpdateController {
         ResponseEntity response = taskUpdateService.createTaskUpdate(taskId, file, message);
         return response;
     }
+    @GetMapping("/api/taskupdate/{taskId}")
+    public ResponseEntity getTaskUpdateByTaskId(@PathVariable int taskId) {
+        ResponseEntity response = taskUpdateService.getTaskUpdateByTaskId(taskId);
+        return response;
+    }
 }

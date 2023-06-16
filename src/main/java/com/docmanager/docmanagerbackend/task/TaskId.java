@@ -39,8 +39,8 @@ public class TaskId implements Serializable {
     public String toString() {
         //the document field and the department fields i want to be printed as their ids
         return "TaskId{" +
-                "document=" + document.getId() +
-                ", department=" + department.getId() +
+                "document=" + document.getDocId() +
+                ", department=" + department.getDepId() +
                 ", createdDate=" + createdDate +
                 '}';
     }

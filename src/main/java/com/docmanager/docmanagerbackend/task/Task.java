@@ -1,5 +1,6 @@
 package com.docmanager.docmanagerbackend.task;
 
+import com.docmanager.docmanagerbackend.department.Department;
 import com.docmanager.docmanagerbackend.document.Document;
 import com.docmanager.docmanagerbackend.employee.Employee;
 import com.docmanager.docmanagerbackend.taskupdate.TaskUpdate;
@@ -15,25 +16,25 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "Tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer taskId;
 
     @ManyToOne
-    @JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "author_id", referencedColumnName = "employeeId")
     private Employee author;
 
     @ManyToOne
-    @JoinColumn(name = "employee_assigned_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "employee_assigned_id", referencedColumnName = "employeeId")
     private Employee employeeAssigned;
 
     private Date postDate;
     private String title;
     private String description;
     @ManyToMany(cascade = {
-            CascadeType.MERGE
+            CascadeType.ALL
     })
     @JoinTable(name = "task_doc_joined",
             joinColumns = @JoinColumn(name ="task_id"),
@@ -43,13 +44,16 @@ public class Task {
 
     @OneToMany(mappedBy = "task")
     private List<TaskUpdate> taskUpdates;
+    @ManyToOne
+    @JoinColumn(name = "current_department_id", referencedColumnName = "depId")
+    private Department currentDepartment;
 
     @Override
     public String toString() {
         return "Task{" +
-                "id=" + id +
-                ", author={id:" + author.getId() + ", firstName: " + author.getFirstName() + ", lastName: " + author.getLastName() + "}"  +
-                ", employeeAssigned={id" + employeeAssigned.getId() + ", firstName: " + employeeAssigned.getFirstName() + ", lastName: " + employeeAssigned.getLastName() + "}"  +
+                "id=" + taskId +
+                ", author={id:" + author.getEmployeeId() + ", firstName: " + author.getFirstName() + ", lastName: " + author.getLastName() + "}"  +
+                ", employeeAssigned={id" + employeeAssigned.getEmployeeId() + ", firstName: " + employeeAssigned.getFirstName() + ", lastName: " + employeeAssigned.getLastName() + "}"  +
 //                ", taskUpdates=" + taskUpdates +
                 ", postDate=" + postDate +
                 ", title='" + title + '\'' +

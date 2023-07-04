@@ -27,7 +27,6 @@ public class DocumentController {
     public ResponseEntity downloadDocument(@PathVariable String fileName) {
         return documentService.downloadDocument(fileName);
     }
-    //method that return a list with all documents
     @GetMapping("/api/doc/list")
     public ResponseEntity getAllDocuments() {
         List<DocumentDTO> documentDTOList = documentService.getAllDocuments();
@@ -41,7 +40,6 @@ public class DocumentController {
         return documentDTO != null ?
                 ResponseEntity.ok(documentDTO) : ResponseEntity.notFound().build();
     }
-
     @GetMapping("/api/doc/name={name}")
     public ResponseEntity getDocumentById(@PathVariable String name) {
         DocumentDTO documentDTO = documentService.getDocumentByName(name);

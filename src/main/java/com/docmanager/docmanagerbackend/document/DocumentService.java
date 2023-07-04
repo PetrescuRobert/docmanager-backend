@@ -27,11 +27,6 @@ import java.util.stream.Collectors;
 public class DocumentService {
     private final DocumentRepository repository;
     private final EmployeeService employeeService;
-
-    private DocumentDTO mapDocumentToDocumentDto(Document document) {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(document, DocumentDTO.class);
-    }
     private void saveDocument(String fileName, String downloadPath, Set<Task> relatedTasks) {
         String authorEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Employee author = employeeService.getEmployeeByEmail(authorEmail);
@@ -56,13 +51,11 @@ public class DocumentService {
             }
         }
         //if exists write file into "uploads" directory
-        System.out.println(path);
         try {
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         //save the new document data in database
         String downloadPath = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -73,6 +66,11 @@ public class DocumentService {
 
 
         return ResponseEntity.ok("File uploaded!");
+    }
+
+    private DocumentDTO mapDocumentToDocumentDto(Document document) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(document, DocumentDTO.class);
     }
 
     public ResponseEntity uploadDocuments(MultipartFile[] files) {
